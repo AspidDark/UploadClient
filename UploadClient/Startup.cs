@@ -22,12 +22,7 @@ namespace UploadClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServicesInAssemblies(Configuration);
-            services.AddControllersWithViews();
 
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,37 +1,45 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using UploadClient.Models.Files;
+using UploadClient.Models.Convertion;
+using UploadClient.Contracts.Response;
 
 namespace UploadClient.Controllers
 {
+    [Produces("application/octet-stream")]
     public class Upload1CController : Controller
     {
-        IWebHostEnvironment _appEnvironment;
-
-        public Upload1CController(IWebHostEnvironment appEnvironment)
+        private readonly IConvertToExcel _convertToExcel;
+        public Upload1CController(IConvertToExcel convertToExcel)
         {
-            _appEnvironment = appEnvironment;
+            _convertToExcel = convertToExcel;
         }
 
         [HttpPost("api/Upload1CFile")]
-        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        [ProducesResponseType(typeof(Stream), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        public async Task<IActionResult> AddFile(FileUploadViewModelTxt model)
         {
-            if (uploadedFile != null)
-            {
-                // путь к папке Files
-                string path = "/Files/" + uploadedFile.FileName;
-                // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+            var file = model.File;
 
+            if (file.Length > 0)
+            {
+
+             //   var response = _convertToExcel.Convert(model.File);
+
+                Stream stream =  _convertToExcel.Convert(model.File);
+
+                if (stream == null)
+                    return BadRequest(new ErrorResponse()); // returns a NotFoundResult with Status404NotFound response.
+
+
+
+
+                return File(stream, "application/octet-stream"); // returns a FileStreamResult
+                //return Ok();
             }
-            return Ok();
+            return BadRequest(new ErrorResponse());
         }
 
   

@@ -1,29 +1,25 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
+using UploadClient.Contracts.Response;
 using UploadClient.Models.Files;
 
 namespace UploadClient.Controllers
 {
+    [Produces("application/json")]
     public class UploadExcelController : Controller
     {
-        [HttpPost("api/Upload")]
-        public async Task<IActionResult> Upload(FileUploadViewModel model)
+        [HttpPost("api/UploadExcel")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
+        public async Task<IActionResult> Upload(FileUploadViewModelXls model)
         {
-            var file = model.File;
 
-            if (file.Length > 0)
+            if (model.File.Length > 0)
             {
-                string path = Path.Combine(@"/Files/", "uploadFiles");
-                using (var fs = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
 
-                model.source = $"/uploadFiles{file.FileName}";
-                model.Extension = Path.GetExtension(file.FileName).Substring(1);
+                return Ok();
             }
-            return BadRequest();
+            return BadRequest(new ErrorResponse());
         }
 
     }
