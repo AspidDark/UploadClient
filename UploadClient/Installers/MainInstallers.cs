@@ -8,7 +8,8 @@ namespace UploadClient.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IConvertToExcel, ConvertToExcel>(); 
+            services.AddTransient<IConvertToExcel, ConvertToExcel>();
+            services.AddTransient<IExcelParseAndSend, ExcelParseAndSend>();
 
             services.AddControllersWithViews();
 
