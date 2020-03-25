@@ -5,6 +5,6 @@ namespace UploadClient.Models.Convertion
 {
     public interface IConvertToExcel
     {
-        public MemoryStream Convert(IFormFile formFile);
+        public byte[] Convert(IFormFile formFile);
     }
 }

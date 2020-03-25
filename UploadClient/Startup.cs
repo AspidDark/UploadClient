@@ -22,6 +22,8 @@ namespace UploadClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServicesInAssemblies(Configuration);
+            //Cors
+            services.AddCors();
 
         }
 
@@ -36,6 +38,10 @@ namespace UploadClient
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            // подключаем CORS
+            app.UseCors(builder => builder.AllowAnyOrigin());
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

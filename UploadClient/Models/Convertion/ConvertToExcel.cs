@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +16,7 @@ namespace UploadClient.Models.Convertion
     public sealed class ConvertToExcel : IConvertToExcel
     {
 
-        public MemoryStream Convert(IFormFile formFile)
+        public byte[] Convert(IFormFile formFile)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var inputFileName = formFile.Name;
@@ -116,12 +117,35 @@ namespace UploadClient.Models.Convertion
             return result;
         }
 
-        public static MemoryStream SaveWorkbookToMemoryStream(IXLWorkbook workbook)
+        public static byte[] SaveWorkbookToMemoryStream(IXLWorkbook workbook)
         {
             using MemoryStream stream = new MemoryStream();
+
             workbook.SaveAs(stream, new SaveOptions { EvaluateFormulasBeforeSaving = false, GenerateCalculationChain = false, ValidatePackage = false });
-            return stream;
+            var bytes = stream.ToArray();
+           // var tmp = ByteArrayToObject(bytes);
+
+            string path = @"C:\test1.xlsx";
+            File.WriteAllBytes(path, bytes);
+
+            return bytes;
         }
 
+        //public static byte[] SaveWorkbookToMemoryStream(IXLWorkbook workbook)
+        //{
+        //    using MemoryStream stream = new MemoryStream();
+
+        //    workbook.SaveAs(stream, new SaveOptions { EvaluateFormulasBeforeSaving = false, GenerateCalculationChain = false, ValidatePackage = false });
+        //   // var bytes = stream.ToArray();
+        //    return stream;
+        //}
+        private static ExcelPackage ByteArrayToObject(byte[] arrBytes)
+        {
+            using (MemoryStream memStream = new MemoryStream(arrBytes))
+            {
+                ExcelPackage package = new ExcelPackage(memStream);
+                return package;
+            }
+        }
     }
 }

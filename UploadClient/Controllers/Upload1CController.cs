@@ -28,16 +28,13 @@ namespace UploadClient.Controllers
 
              //   var response = _convertToExcel.Convert(model.File);
 
-                Stream stream =  _convertToExcel.Convert(model.File);
+                var resault =  _convertToExcel.Convert(model.File);
 
-                if (stream == null)
+                if (resault == null)
                     return BadRequest(new ErrorResponse()); // returns a NotFoundResult with Status404NotFound response.
 
+                return File(resault, "application/octet-stream"); // returns a FileStreamResult
 
-
-
-                return File(stream, "application/octet-stream"); // returns a FileStreamResult
-                //return Ok();
             }
             return BadRequest(new ErrorResponse());
         }
