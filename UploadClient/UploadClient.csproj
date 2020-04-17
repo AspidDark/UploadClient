@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Contracts\Request\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -22,21 +22,22 @@ namespace UploadClient.Controllers
         public async Task<IActionResult> AddFile(FileUploadViewModelTxt model)
         {
             var file = model.File;
+            return File("0203.xlsx", "application/octet-stream",
+                        "NewName34.xlsx");
+            //if (file.Length > 0)
+            //{
 
-            if (file.Length > 0)
-            {
+            // //   var response = _convertToExcel.Convert(model.File);
 
-             //   var response = _convertToExcel.Convert(model.File);
+            //    var resault =  _convertToExcel.Convert(model.File);
 
-                var resault =  _convertToExcel.Convert(model.File);
+            //    if (resault == null)
+            //        return BadRequest(new ErrorResponse()); // returns a NotFoundResult with Status404NotFound response.
 
-                if (resault == null)
-                    return BadRequest(new ErrorResponse()); // returns a NotFoundResult with Status404NotFound response.
+            //    return File(resault, "application/octet-stream"); // returns a FileStreamResult
 
-                return File(resault, "application/octet-stream"); // returns a FileStreamResult
-
-            }
-            return BadRequest(new ErrorResponse());
+            //}
+            //return BadRequest(new ErrorResponse());
         }
 
   
